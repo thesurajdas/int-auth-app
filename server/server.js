@@ -4,12 +4,15 @@ import dbConnect from "./dbConnect.js";
 import authRoutes from "./routes/auth.js";
 import refreshToken from "./routes/refreshToken.js";
 import userRoutes from "./routes/user.js";
+import cors from "cors";
+
 const app = express();
 config();
 dbConnect();
-
+app.use(cors());
 app.use(express.json());
-app.use("/api", authRoutes);
+
+app.use("/api/auth", authRoutes);
 app.use("/api/refresh", refreshToken);
 app.use("/api/user", userRoutes);
 

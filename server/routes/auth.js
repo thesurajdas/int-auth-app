@@ -3,9 +3,11 @@ import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import {
   loginBodyValidation,
+  refreshTokenBodyValidation,
   registerBodyValidation,
 } from "../utils/validationSchema.js";
 import generateTokens from "../utils/generateToken.js";
+import UserToken from "../models/UserToken.js";
 
 const router = Router();
 router.post("/register", async (req, res) => {
@@ -24,10 +26,17 @@ router.post("/register", async (req, res) => {
     }
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
     const hashPassword = await bcrypt.hash(req.body.password, salt);
-    await new User({ ...req.body, password: hashPassword }).save();
-    res
-      .status(201)
-      .json({ error: false, message: "Account created successfully!" });
+    const userData = await new User({
+      ...req.body,
+      password: hashPassword,
+    }).save();
+    const { accessToken, refreshToken } = await generateTokens(userData);
+    res.status(201).json({
+      error: false,
+      accessToken,
+      refreshToken,
+      message: "Account created successfully!",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -74,6 +83,33 @@ router.post("/login", async (req, res) => {
       error: true,
       message: "internal Server Error",
     });
+  }
+});
+
+router.delete("/logout", async (req, res) => {
+  try {
+    const { error } = refreshTokenBodyValidation(req.body);
+    if (error) {
+      return res.status(400).json({
+        error: true,
+        message: error.details[0].message,
+      });
+    }
+    const userToken = await UserToken.findOne({ token: req.body.refreshToken });
+    if (!userToken) {
+      return res.status(200).json({
+        error: false,
+        message: "Logout successfully",
+      });
+    }
+    await UserToken.deleteOne({ token: req.body.refreshToken });
+    res.status(200).json({
+      error: false,
+      message: "Logout successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: true, message: "Internal Server Error" });
   }
 });
 
