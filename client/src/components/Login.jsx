@@ -29,12 +29,12 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="w-[900px] h-[500px] flex rounded-lg shadow-lg">
+    <div className="w-full min-h-screen bg-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-4xl h-auto lg:h-[500px] flex flex-col md:flex-row rounded-lg shadow-lg overflow-hidden">
         {/* Left Section */}
-        <div className="flex-2 flex flex-col items-center justify-center bg-white rounded-l-lg p-6">
-          <form className="flex flex-col items-center" onSubmit={handleSubmit}>
-            <h1 className="text-3xl font-semibold mb-6">
+        <div className="flex-1 flex flex-col items-center justify-center bg-white p-6 md:p-12">
+          <form className="flex flex-col items-center w-full max-w-sm" onSubmit={handleSubmit}>
+            <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold mb-6">
               Login to Your Account
             </h1>
             <input
@@ -44,7 +44,7 @@ const Login = () => {
               onChange={handleChange}
               value={data.email}
               required
-              className="outline-none border-none w-[370px] p-4 rounded-lg bg-gray-100 mb-2 text-sm"
+              className="outline-none border-none w-full p-4 rounded-lg bg-gray-100 mb-4 text-sm"
             />
             <input
               type="password"
@@ -53,28 +53,28 @@ const Login = () => {
               onChange={handleChange}
               value={data.password}
               required
-              className="outline-none border-none w-[370px] p-4 rounded-lg bg-gray-100 mb-2 text-sm"
+              className="outline-none border-none w-full p-4 rounded-lg bg-gray-100 mb-4 text-sm"
             />
             {error && (
-              <div className="w-[370px] p-4 bg-red-500 text-white text-sm rounded-lg text-center mb-2">
+              <div className="w-full p-4 bg-red-500 text-white text-sm rounded-lg text-center mb-4">
                 {error}
               </div>
             )}
             <button
               type="submit"
-              className="bg-green-500 text-white font-bold py-3 px-6 rounded-full mt-2 hover:bg-green-600 transition">
+              className="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition">
               Sign In
             </button>
           </form>
         </div>
 
         {/* Right Section */}
-        <div className="flex-1 flex flex-col items-center justify-center bg-green-500 text-white rounded-r-lg p-6">
-          <h1 className="text-3xl font-semibold mb-4">New Here?</h1>
+        <div className="flex-1 flex flex-col items-center justify-center bg-green-500 text-white p-6 md:p-12">
+          <h1 className="text-2xl md:text-3xl font-semibold mb-4">New Here?</h1>
           <Link href="/register">
             <button
               type="button"
-              className="bg-white text-green-500 font-bold py-3 px-6 rounded-full mt-2 hover:bg-gray-100 transition">
+              className="bg-white text-green-500 font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition">
               Sign Up
             </button>
           </Link>
