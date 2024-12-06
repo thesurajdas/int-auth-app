@@ -33,7 +33,9 @@ const Login = () => {
       <div className="w-full max-w-4xl h-auto lg:h-[500px] flex flex-col md:flex-row rounded-lg shadow-lg overflow-hidden">
         {/* Left Section */}
         <div className="flex-1 flex flex-col items-center justify-center bg-white p-6 md:p-12">
-          <form className="flex flex-col items-center w-full max-w-sm" onSubmit={handleSubmit}>
+          <form
+            className="flex flex-col items-center w-full max-w-sm"
+            onSubmit={handleSubmit}>
             <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold mb-6">
               Login to Your Account
             </h1>
@@ -65,7 +67,19 @@ const Login = () => {
               className="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition">
               Sign In
             </button>
+            <Link href="/forgot-password">
+              <p className="text-sm text-green-500 hover:text-green-600 mt-4 cursor-pointer">
+                Forgot Password?
+              </p>
+            </Link>
           </form>
+          <Link href="/">
+            <button
+              type="button"
+              className="bg-gray-200 text-gray-500 font-bold py-3 px-6 rounded-full mt-6 hover:bg-gray-300 transition">
+              Back to Home
+            </button>
+          </Link>
         </div>
 
         {/* Right Section */}
