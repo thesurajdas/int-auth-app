@@ -1,4 +1,5 @@
 "use client";
+import { logout } from "@/lib/auth";
 import Link from "next/link";
 
 const LoggedNavbar = () => {
@@ -12,11 +13,11 @@ const LoggedNavbar = () => {
               Home
             </button>
           </Link>
-          <Link href="/logout">
-            <button className="bg-white text-green-500 font-bold py-2 px-4 rounded-md hover:bg-gray-100 text-sm md:text-base">
-              Logout
-            </button>
-          </Link>
+          <button
+            className="bg-white text-green-500 font-bold py-2 px-4 rounded-md hover:bg-gray-100 text-sm md:text-base"
+            onClick={logout}>
+            Logout
+          </button>
         </div>
       </div>
     </nav>

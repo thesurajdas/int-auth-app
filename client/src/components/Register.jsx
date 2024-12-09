@@ -1,37 +1,28 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { register } from "@/lib/auth";
 
 const Register = () => {
   const [data, setData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
-  const router = useRouter();
 
   const handleChange = ({ target: input }) => {
     setData({ ...data, [input.name]: input.value });
+    console.log(data);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:8080/api/users";
-      const { data: res } = await axios.post(url, data);
-      router.push("/login");
-      console.log(res.message);
-    } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status <= 500
-      ) {
-        setError(error.response.data.message);
-      }
+      await register(data.email, data.password);
+      window.location.href = "/login"; // Redirect to login page after successful registration
+    } catch (err) {
+      setError(err.message || "Something went wrong");
     }
   };
 
@@ -40,7 +31,9 @@ const Register = () => {
       <div className="w-full max-w-4xl h-auto flex flex-col md:flex-row rounded-lg shadow-lg overflow-hidden">
         {/* Left Section */}
         <div className="flex-1 flex flex-col items-center justify-center bg-green-500 text-white p-6 md:p-12">
-          <h1 className="text-2xl md:text-3xl font-semibold mb-4">Welcome Back</h1>
+          <h1 className="text-2xl md:text-3xl font-semibold mb-4">
+            Welcome Back
+          </h1>
           <Link href="/login">
             <button className="bg-white text-green-500 font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition">
               Sign In
@@ -50,23 +43,18 @@ const Register = () => {
 
         {/* Right Section */}
         <div className="flex-1 flex flex-col items-center justify-center bg-white p-6 md:p-12">
-          <form className="flex flex-col items-center w-full max-w-sm" onSubmit={handleSubmit}>
-            <h1 className="text-2xl md:text-3xl font-semibold mb-6">Create Account</h1>
+          <form
+            className="flex flex-col items-center w-full max-w-sm"
+            onSubmit={handleSubmit}>
+            <h1 className="text-2xl md:text-3xl font-semibold mb-6">
+              Create Account
+            </h1>
             <input
               type="text"
               placeholder="First Name"
-              name="firstName"
+              name="name"
               onChange={handleChange}
-              value={data.firstName}
-              required
-              className="w-full p-4 rounded-lg bg-gray-100 mb-4 text-sm outline-none"
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              name="lastName"
-              onChange={handleChange}
-              value={data.lastName}
+              value={data.name}
               required
               className="w-full p-4 rounded-lg bg-gray-100 mb-4 text-sm outline-none"
             />
@@ -99,6 +87,13 @@ const Register = () => {
               Sign Up
             </button>
           </form>
+          <Link href="/">
+            <button
+              type="button"
+              className="bg-gray-200 text-gray-500 font-bold py-3 px-6 rounded-full mt-6 hover:bg-gray-300 transition">
+              Back to Home
+            </button>
+          </Link>
         </div>
       </div>
     </div>

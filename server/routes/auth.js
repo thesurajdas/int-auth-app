@@ -69,8 +69,23 @@ router.post("/login", async (req, res) => {
         .status(401)
         .json({ error: true, message: "Invaild password!" });
     }
+    
     //Generate Access and refresh Token
     const { accessToken, refreshToken } = await generateTokens(user);
+
+    // Set HTTP-only cookies
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
+      sameSite: "lax", // Adjust based on your app's needs
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
+      sameSite: "lax",
+    });
+
     res.status(200).json({
       error: false,
       accessToken,
@@ -88,29 +103,16 @@ router.post("/login", async (req, res) => {
 
 router.delete("/logout", async (req, res) => {
   try {
-    const { error } = refreshTokenBodyValidation(req.body);
-    if (error) {
-      return res.status(400).json({
-        error: true,
-        message: error.details[0].message,
-      });
-    }
-    const userToken = await UserToken.findOne({ token: req.body.refreshToken });
-    if (!userToken) {
-      return res.status(200).json({
-        error: false,
-        message: "Logout successfully",
-      });
-    }
-    await UserToken.deleteOne({ token: req.body.refreshToken });
-    res.status(200).json({
-      error: false,
-      message: "Logout successfully",
-    });
+    // Clear cookies
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    res.status(200).json({ error: false, message: "Logged out successfully!" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: true, message: "Internal Server Error" });
   }
 });
+
 
 export default router;

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { login } from "@/lib/auth";
 
 const Login = () => {
   const [data, setData] = useState({ email: "", password: "" });
@@ -13,18 +14,10 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:8080/api/auth";
-      const { data: res } = await axios.post(url, data);
-      localStorage.setItem("token", res.data);
-      window.location = "/";
-    } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status <= 500
-      ) {
-        setError(error.response.data.message);
-      }
+      await login(data.email, data.password);
+      window.location.href = "/dashboard"; // Redirect to the homepage after login
+    } catch (err) {
+      setError(err.message || "Something went wrong");
     }
   };
 
@@ -67,11 +60,11 @@ const Login = () => {
               className="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition">
               Sign In
             </button>
-            <Link href="/forgot-password">
+            {/* <Link href="/forgot-password">
               <p className="text-sm text-green-500 hover:text-green-600 mt-4 cursor-pointer">
                 Forgot Password?
               </p>
-            </Link>
+            </Link> */}
           </form>
           <Link href="/">
             <button

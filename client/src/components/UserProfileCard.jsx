@@ -15,8 +15,7 @@ const UserProfileCard = ({ user }) => {
       <h2 className="text-xl font-semibold mb-2">{user?.name || "John Doe"}</h2>
       <p className="text-gray-600 mb-4">{user?.email || "johndoe@example.com"}</p>
       <div className="text-sm text-gray-500">
-        <p>Role: {user?.role || "User"}</p>
-        <p>Member Since: {user?.memberSince || "2023"}</p>
+        <p>Role: {user?.roles[0] || "Unkown"}</p>
       </div>
     </div>
   );
