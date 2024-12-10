@@ -13,13 +13,12 @@ const Register = () => {
 
   const handleChange = ({ target: input }) => {
     setData({ ...data, [input.name]: input.value });
-    console.log(data);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register(data.email, data.password);
+      await register(data.name, data.email, data.password);
       window.location.href = "/login"; // Redirect to login page after successful registration
     } catch (err) {
       setError(err.message || "Something went wrong");
@@ -51,7 +50,7 @@ const Register = () => {
             </h1>
             <input
               type="text"
-              placeholder="First Name"
+              placeholder="Full Name"
               name="name"
               onChange={handleChange}
               value={data.name}

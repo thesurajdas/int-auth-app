@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import {
   loginBodyValidation,
-  refreshTokenBodyValidation,
   registerBodyValidation,
 } from "../utils/validationSchema.js";
 import generateTokens from "../utils/generateToken.js";
@@ -69,7 +68,7 @@ router.post("/login", async (req, res) => {
         .status(401)
         .json({ error: true, message: "Invaild password!" });
     }
-    
+
     //Generate Access and refresh Token
     const { accessToken, refreshToken } = await generateTokens(user);
 
@@ -78,12 +77,14 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
       sameSite: "lax", // Adjust based on your app's needs
+      maxAge: 14 * 60 * 1000, // 14 minutes
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
       sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
     res.status(200).json({
@@ -113,6 +114,5 @@ router.delete("/logout", async (req, res) => {
     res.status(500).json({ error: true, message: "Internal Server Error" });
   }
 });
-
 
 export default router;

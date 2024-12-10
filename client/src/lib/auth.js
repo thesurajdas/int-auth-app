@@ -14,21 +14,7 @@ async function fetchAPI(url, options = {}, includeAuth = true) {
   });
 
   if (!response.ok) {
-    if (response.status === 401 && includeAuth) {
-      // Handle token refresh
-      const refreshResponse = await fetch(`${BASE_URL}/auth/refresh`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Include cookies for refresh
-      });
-
-      if (refreshResponse.ok) {
-        // Retry the original request after refresh
-        return fetchAPI(url, options, false); // Retry without triggering refresh again
-      }
-
+    if (response.status === 403 && includeAuth) {
       // Redirect to login if refresh fails
       window.location.href = "/login";
     }
@@ -56,10 +42,10 @@ async function login(email, password) {
 }
 
 // Register function
-async function register(email, password) {
+async function register(name, email, password) {
   await fetchAPI("/auth/register", {
     method: "POST",
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ name, email, password }),
   });
 }
 

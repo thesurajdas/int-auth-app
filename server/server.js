@@ -12,7 +12,7 @@ config();
 dbConnect();
 
 const corsOptions = {
-  origin: "http://localhost:3000", // Replace with your client origin
+  origin: "http://localhost:3001", // Replace with your client origin
   credentials: true, // Allow cookies and credentials
 };
 
