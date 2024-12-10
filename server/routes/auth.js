@@ -6,7 +6,6 @@ import {
   registerBodyValidation,
 } from "../utils/validationSchema.js";
 import generateTokens from "../utils/generateToken.js";
-import UserToken from "../models/UserToken.js";
 
 const router = Router();
 router.post("/register", async (req, res) => {
@@ -29,11 +28,18 @@ router.post("/register", async (req, res) => {
       ...req.body,
       password: hashPassword,
     }).save();
-    const { accessToken, refreshToken } = await generateTokens(userData);
+    const {
+      accessToken,
+      refreshToken,
+      accessTokenExpiresAt,
+      refreshTokenExpiresAt,
+    } = await generateTokens(userData);
     res.status(201).json({
       error: false,
       accessToken,
       refreshToken,
+      accessTokenExpiresAt,
+      refreshTokenExpiresAt,
       message: "Account created successfully!",
     });
   } catch (error) {
@@ -70,7 +76,12 @@ router.post("/login", async (req, res) => {
     }
 
     //Generate Access and refresh Token
-    const { accessToken, refreshToken } = await generateTokens(user);
+    const {
+      accessToken,
+      refreshToken,
+      accessTokenExpiresAt,
+      refreshTokenExpiresAt,
+    } = await generateTokens(user);
 
     // Set HTTP-only cookies
     res.cookie("accessToken", accessToken, {
@@ -87,10 +98,19 @@ router.post("/login", async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
+    res.cookie("isAuth", true, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production", // Ensure HTTPS in production
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    });
+
     res.status(200).json({
       error: false,
       accessToken,
+      accessTokenExpiresAt,
       refreshToken,
+      refreshTokenExpiresAt,
       message: "Login successfully!",
     });
   } catch (error) {
@@ -107,6 +127,7 @@ router.delete("/logout", async (req, res) => {
     // Clear cookies
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
+    res.clearCookie("isAuth");
 
     res.status(200).json({ error: false, message: "Logged out successfully!" });
   } catch (error) {

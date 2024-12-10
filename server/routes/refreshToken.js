@@ -18,7 +18,7 @@ router.post("/", (req, res) => {
       const accessToken = jwt.sign(
         payload,
         process.env.ACCESS_TOKEN_PRIVATE_KEY,
-        { expiresIn: "14m" }
+        { expiresIn: "15m" }
       );
       res.status(200).json({
         error: false,

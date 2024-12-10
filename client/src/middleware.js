@@ -6,6 +6,12 @@ export function middleware(request) {
   // Redirect to login if no token is found for protected routes
   if (request.nextUrl.pathname.startsWith("/dashboard") && !refreshToken) {
     return NextResponse.redirect(new URL("/login", request.url));
+  } else if (
+    (request.nextUrl.pathname.startsWith("/login") ||
+    request.nextUrl.pathname.startsWith("/register")) &&
+    refreshToken
+  ) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next();
@@ -13,5 +19,5 @@ export function middleware(request) {
 
 // Config for middleware
 export const config = {
-  matcher: ["/dashboard/:path*", "/login/:path*"], // Add paths as needed
+  matcher: ["/dashboard/:path*", "/login", "/register"],
 };
