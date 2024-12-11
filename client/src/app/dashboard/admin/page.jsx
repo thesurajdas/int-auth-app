@@ -5,7 +5,7 @@ import { getAllUsers } from "@/lib/auth";
 import { useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa";
 
-export default function Page() {
+export default function AdminPage() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);

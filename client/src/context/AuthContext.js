@@ -2,26 +2,32 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
+import { getCurrentUser } from "@/lib/auth";
+
 const AuthContext = createContext();
 
-// Provider to wrap the application and provide global auth state
+// Provider to wrap the application and provide global auth and role state
 export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null); // Stores user details including roles
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
       setLoading(true);
       try {
-        // Checking authentication from cookies or an API
-        const accessToken = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("isAuth="))
-          ?.split("=")[1];
+        const userData = await getCurrentUser();
 
-        setIsLoggedIn(!!accessToken);
+        if (!userData) {
+          setIsLoggedIn(false);
+          setUser(null);
+        } else {
+          setUser(userData.data);
+          setIsLoggedIn(true);
+        }
       } catch (error) {
-        console.error("Error checking authentication:", error);
+        console.error("Error fetching user data:", error);
+        setUser(null);
         setIsLoggedIn(false);
       } finally {
         setLoading(false);
@@ -32,10 +38,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, loading }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, loading }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
+// Custom hook to access auth and role state
 export const useAuth = () => useContext(AuthContext);

@@ -1,9 +1,11 @@
 "use client";
+import { useAuth } from "@/context/AuthContext";
 import { logout } from "@/lib/auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LoggedNavbar = () => {
+  const { user } = useAuth();
   const pathname = usePathname();
 
   // Define the path(s) where the button should be hidden
@@ -21,13 +23,14 @@ const LoggedNavbar = () => {
               Home
             </button>
           </Link>
-          {shouldShowButton && (
-            <Link href="/dashboard/admin">
-              <button className="bg-white text-green-500 font-bold py-2 px-4 rounded-md hover:bg-gray-100 text-sm md:text-base">
-                Admin Dashboard
-              </button>
-            </Link>
-          )}
+          {!shouldShowButton ||
+            (user?.roles?.includes("admin") && (
+              <Link href="/dashboard/admin">
+                <button className="bg-white text-green-500 font-bold py-2 px-4 rounded-md hover:bg-gray-100 text-sm md:text-base">
+                  Admin Dashboard
+                </button>
+              </Link>
+            ))}
           {!shouldShowButton && (
             <Link href="/dashboard">
               <button className="bg-white text-green-500 font-bold py-2 px-4 rounded-md hover:bg-gray-100 text-sm md:text-base">
@@ -36,7 +39,7 @@ const LoggedNavbar = () => {
             </Link>
           )}
           <button
-            className="bg-red-500 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-100 text-sm md:text-base"
+            className="bg-red-500 text-white font-bold py-2 px-4 rounded-md hover:bg-red-400 text-sm md:text-base"
             onClick={logout}>
             Logout
           </button>

@@ -14,12 +14,10 @@ async function fetchAPI(url, options = {}, includeAuth = true) {
   });
 
   if (!response.ok) {
-    if (response.status === 403 && includeAuth) {
-      // Redirect to login if refresh fails
-      window.location.href = "/login";
-    }
-
     const errorData = await response.json();
+    if (response.status === 403 && includeAuth) {
+      return { error: "unauthorized" }; // Prevent infinite redirect loop
+    }
     throw new Error(errorData.message || "Something went wrong");
   }
 
@@ -28,16 +26,11 @@ async function fetchAPI(url, options = {}, includeAuth = true) {
 
 // Login function
 async function login(email, password) {
-  const data = await fetchAPI(
-    "/auth/login",
-    {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    },
-    false // No token needed for login
-  );
+  const data = await fetchAPI("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  }, false); // No token needed for login
 
-  // No need to manually store tokens; they are handled by cookies
   return data;
 }
 
@@ -51,12 +44,24 @@ async function register(name, email, password) {
 
 // Fetch current user
 async function getCurrentUser() {
-  return fetchAPI("/user/me");
+  const userData = await fetchAPI("/user/me");
+
+  if (userData.error === "unauthorized") {
+    return null; // Handle unauthorized state
+  }
+
+  return userData;
 }
 
-//fetch all users
+//Fetch all users
 async function getAllUsers(url) {
-  return fetchAPI(url);
+  const userData = await fetchAPI(url);
+
+  if (userData.error === "unauthorized") {
+    return null; // Handle unauthorized state
+  }
+
+  return userData;
 }
 
 // Logout function
@@ -65,8 +70,7 @@ async function logout() {
     method: "DELETE",
   });
 
-  // Redirect to login after logout
-  window.location.href = "/login";
+  window.location.href = "/login"; // Redirect after logout
 }
 
-export { login, register, getCurrentUser, logout, getAllUsers };
+export { login, register, getCurrentUser, logout , getAllUsers};
