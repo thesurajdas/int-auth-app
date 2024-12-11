@@ -1,35 +1,39 @@
 "use client";
+
 const UserTable = ({ users, loading, currentPage, handlePageChange, totalPages }) => {
   return (
     <div className="container mx-auto p-4">
-      <table className="min-w-full table-auto bg-white border border-gray-200 rounded-md shadow-md">
-        <thead>
-          <tr className="bg-green-600 text-white">
-            <th className="p-3 text-left">ID</th>
-            <th className="p-3 text-left">Name</th>
-            <th className="p-3 text-left">Email</th>
-            <th className="p-3 text-left">Role</th>
-          </tr>
-        </thead>
-        <tbody>
-          {loading ? (
-            <tr>
-              <td colSpan="4" className="text-center p-4">
-                Loading...
-              </td>
+      {/* Wrapping the table with overflow-x-auto for responsiveness */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full table-auto bg-white border border-gray-200 rounded-md shadow-md">
+          <thead>
+            <tr className="bg-green-600 text-white">
+              <th className="p-3 text-left">ID</th>
+              <th className="p-3 text-left">Name</th>
+              <th className="p-3 text-left">Email</th>
+              <th className="p-3 text-left">Role</th>
             </tr>
-          ) : (
-            users.map((user) => (
-              <tr key={user._id} className="border-b hover:bg-gray-100">
-                <td className="p-3">{user._id}</td>
-                <td className="p-3">{user.name}</td>
-                <td className="p-3">{user.email}</td>
-                <td className="p-3">{user.roles[0]}</td>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan="4" className="text-center p-4">
+                  Loading...
+                </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              users.map((user) => (
+                <tr key={user._id} className="border-b hover:bg-gray-100">
+                  <td className="p-3">{user._id}</td>
+                  <td className="p-3">{user.name}</td>
+                  <td className="p-3">{user.email}</td>
+                  <td className="p-3">{user.roles[0]}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {/* Pagination Controls */}
       <div className="flex justify-center mt-4">
@@ -45,11 +49,6 @@ const UserTable = ({ users, loading, currentPage, handlePageChange, totalPages }
           disabled={currentPage === totalPages}>
           Next
         </button>
-      </div>
-
-      {/* Mobile responsive table */}
-      <div className="mt-4 block md:hidden">
-        <p className="text-center text-gray-700">Swipe left to see all data</p>
       </div>
     </div>
   );
