@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api";
 
 // Helper to make API requests
@@ -54,6 +56,11 @@ async function getCurrentUser() {
   return fetchAPI("/user/me");
 }
 
+//fetch all users
+async function getAllUsers(url) {
+  return fetchAPI(url);
+}
+
 // Logout function
 async function logout() {
   await fetchAPI("/auth/logout", {
@@ -64,4 +71,4 @@ async function logout() {
   window.location.href = "/login";
 }
 
-export { login, register, getCurrentUser, logout };
+export { login, register, getCurrentUser, logout, getAllUsers };

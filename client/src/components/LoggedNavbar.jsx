@@ -13,8 +13,13 @@ const LoggedNavbar = () => {
               Home
             </button>
           </Link>
+          <Link href="/dashboard/admin">
+            <button className="bg-white text-green-500 font-bold py-2 px-4 rounded-md hover:bg-gray-100 text-sm md:text-base">
+              Admin Dashboard
+            </button>
+          </Link>
           <button
-            className="bg-white text-green-500 font-bold py-2 px-4 rounded-md hover:bg-gray-100 text-sm md:text-base"
+            className="bg-red-500 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-100 text-sm md:text-base"
             onClick={logout}>
             Logout
           </button>
