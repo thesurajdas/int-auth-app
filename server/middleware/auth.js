@@ -44,14 +44,14 @@ const auth = async (req, res, next) => {
       const newAccessToken = jwt.sign(
         payload,
         process.env.ACCESS_TOKEN_PRIVATE_KEY,
-        { expiresIn: "14m" }
+        { expiresIn: "15m" }
       );
       // Store the new access token in cookies
       res.cookie("accessToken", newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-        maxAge: 14 * 60 * 1000, // 14 minutes
+        maxAge: 15 * 60 * 1000, // 15 minutes
       });
 
       // Attach user details to request for further use in subsequent middleware/handlers

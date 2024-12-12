@@ -1,32 +1,46 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-
 import { getCurrentUser } from "@/lib/auth";
 
 const AuthContext = createContext();
 
+// Helper function to extract a specific cookie value
+const getCookieValue = (cookieName) => {
+  return document.cookie
+    .split("; ")
+    .find((cookie) => cookie.startsWith(`${cookieName}=`))
+    ?.split("=")[1];
+};
+
 // Provider to wrap the application and provide global auth and role state
 export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null); // Stores user details including roles
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
-      setLoading(true);
       try {
-        const userData = await getCurrentUser();
+        setLoading(true);
 
-        if (!userData) {
-          setIsLoggedIn(false);
-          setUser(null);
+        // Retrieve the refresh token from cookies
+        const refreshToken = getCookieValue("refreshToken");
+
+        if (refreshToken) {
+          const userData = await getCurrentUser();
+
+          if (userData?.data) {
+            setUser(userData.data);
+            setIsLoggedIn(true);
+          } else {
+            throw new Error("User data not found");
+          }
         } else {
-          setUser(userData.data);
-          setIsLoggedIn(true);
+          throw new Error("Refresh token not found");
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error during authentication check:", error);
         setUser(null);
         setIsLoggedIn(false);
       } finally {

@@ -92,7 +92,7 @@ export const login = async (req, res) => {
     });
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -116,8 +116,6 @@ export const logout = (req, res) => {
   try {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
-    res.clearCookie("isAuth");
-
     res.status(200).json({ error: false, message: "Logged out successfully!" });
   } catch (error) {
     console.error(error);
