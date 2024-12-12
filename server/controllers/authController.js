@@ -5,6 +5,7 @@ import {
   registerBodyValidation,
 } from "../utils/validationSchema.js";
 import generateTokens from "../utils/generateToken.js";
+import sendEmail from "../utils/sendEmail.js";
 
 export const register = async (req, res) => {
   try {
@@ -117,6 +118,65 @@ export const logout = (req, res) => {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
     res.status(200).json({ error: false, message: "Logged out successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
+};
+
+export const verifyEmail = (req, res) => {
+  try {
+    // Send email verification
+    res.status(200).json({ error: false, message: "Email sent successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
+};
+
+export const confirmEmail = (req, res) => {
+  try {
+    // Confirm email verification
+    res
+      .status(200)
+      .json({ error: false, message: "Email verified successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    // const user = await User.findOne({ email: req.body.email });
+    // if (!user) {
+    //   return res
+    //     .status(404)
+    //     .json({ error: true, message: "User with given email not found!" });
+    // }
+
+    // Send password reset email
+    await sendEmail({
+      to: "suraj.das@intglobal.com",
+      subject: "Email Verification",
+      text: "Click on the link to verify your email",
+    });
+    res.status(200).json({
+      error: false,
+      message: "Password reset email sent successfully!",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
+};
+
+export const resetPassword = (req, res) => {
+  try {
+    // Reset password
+    res
+      .status(200)
+      .json({ error: false, message: "Password reset successfully!" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: true, message: "Internal Server Error" });
