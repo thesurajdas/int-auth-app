@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import { useRouter, useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { resetPassword } from "@/lib/auth";
-import Link from "next/link";
 
 const ResetPassword = () => {
-  const [isChanged, setIsChanged] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [passwordData, setPasswordData] = useState({
     token: "",
@@ -17,6 +15,7 @@ const ResetPassword = () => {
   const [message, setMessage] = useState(null);
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const router = useRouter();
 
   const handleChange = (e) => {
     setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
@@ -38,7 +37,7 @@ const ResetPassword = () => {
         newPassword: "",
         confirmPassword: "",
       });
-      setIsChanged(true);
+      router.push("/login");
     } catch (err) {
       toast.error(err.message || "Failed to reset password");
       setMessage({
@@ -50,24 +49,8 @@ const ResetPassword = () => {
     }
   };
 
-  if (isChanged) {
-    return (
-      <div className="w-full min-h-screen bg-gray-200 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <Toaster />
-        <div className="w-full max-w-2xl h-auto flex flex-col rounded-lg shadow-lg overflow-hidden bg-white p-6 md:p-12 gap-4">
-          <div className="flex items-center mt-4 p-4 w-full rounded-lg text-sm bg-green-100 text-green-600">
-            <AiOutlineCheckCircle className="mr-2 text-lg" />
-            Password reset successfully
-          </div>
-          <Link href="/login" className="bg-blue-500 text-white font-bold py-3 rounded-lg text-center">Login Now</Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full min-h-screen bg-gray-200 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-      <Toaster />
       <div className="w-full max-w-2xl h-auto flex flex-col rounded-lg shadow-lg overflow-hidden bg-white p-6 md:p-12">
         <form
           className="flex flex-col items-center w-full max-w-sm"

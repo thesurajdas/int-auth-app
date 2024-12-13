@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 const sendEmail = async ({ to, subject, text }) => {
   try {
@@ -6,7 +6,7 @@ const sendEmail = async ({ to, subject, text }) => {
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT,
-      secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+      secure: process.env.SMTP_SECURE === "true", // true for 465, false for other ports
       auth: {
         user: process.env.SMTP_USER, // SMTP username
         pass: process.env.SMTP_PASS, // SMTP password
@@ -23,9 +23,7 @@ const sendEmail = async ({ to, subject, text }) => {
 
     // Send the email
     await transporter.sendMail(mailOptions);
-    console.log(`Email sent successfully to ${to}`);
   } catch (error) {
-    console.error(`Failed to send email: ${error.message}`);
     throw error;
   }
 };
