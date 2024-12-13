@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
             throw new Error("User data not found");
           }
         } else {
-          throw new Error("Refresh token not found");
+          console.log("You are not LoggedIn!");
         }
       } catch (error) {
         console.error("Error during authentication check:", error);

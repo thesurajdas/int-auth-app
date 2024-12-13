@@ -22,7 +22,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="w-full min-h-screen bg-gray-200 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-4xl h-auto lg:h-[500px] flex flex-col md:flex-row rounded-lg shadow-lg overflow-hidden">
         {/* Left Section */}
         <div className="flex-1 flex flex-col items-center justify-center bg-white p-6 md:p-12">
@@ -60,11 +60,11 @@ const Login = () => {
               className="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition">
               Sign In
             </button>
-            {/* <Link href="/forgot-password">
+            <Link href="/forgot-password">
               <p className="text-sm text-green-500 hover:text-green-600 mt-4 cursor-pointer">
                 Forgot Password?
               </p>
-            </Link> */}
+            </Link>
           </form>
           <Link href="/">
             <button

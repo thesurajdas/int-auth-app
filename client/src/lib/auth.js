@@ -26,10 +26,14 @@ async function fetchAPI(url, options = {}, includeAuth = true) {
 
 // Login function
 async function login(email, password) {
-  const data = await fetchAPI("/auth/login", {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-  }, false); // No token needed for login
+  const data = await fetchAPI(
+    "/auth/login",
+    {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    },
+    false
+  ); // No token needed for login
 
   return data;
 }
@@ -73,4 +77,19 @@ async function logout() {
   window.location.href = "/login"; // Redirect after logout
 }
 
-export { login, register, getCurrentUser, logout , getAllUsers};
+const forgotPassword = async (email) => {
+  await fetchAPI("/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+};
+
+const resetPassword = async (token, password) => {
+  await fetchAPI("/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ token, password }),
+  });
+}
+
+
+export { login, register, getCurrentUser, logout, getAllUsers, forgotPassword, resetPassword };
