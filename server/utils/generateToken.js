@@ -50,4 +50,19 @@ const generateTokens = async (user) => {
   }
 };
 
-export default generateTokens;
+function generateOTP(digits) {
+  if (!digits || digits < 1) {
+    throw new Error("Number of digits must be a positive integer");
+  }
+  const min = Math.pow(10, digits - 1); // Smallest number with the given digits
+  const max = Math.pow(10, digits) - 1; // Largest number with the given digits
+  return Math.floor(min + Math.random() * (max - min + 1));
+}
+
+function generateStringToken() {
+  const randomPart = Math.random().toString(36).substring(2, 15);
+  const timestampPart = Date.now().toString(36);
+  return randomPart + timestampPart;
+}
+
+export { generateTokens, generateOTP, generateStringToken };

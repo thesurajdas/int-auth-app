@@ -26,12 +26,16 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false, // Initially, the email is not verified
     },
-    emailVerificationToken: {
+    emailVerificationOTP: {
       type: String, // Store the JWT or random string for email verification
       default: null,
     },
     passwordResetToken: {
       type: String, // Store the JWT or random string for password reset
+      default: null,
+    },
+    passwordResetTokenExpiry: {
+      type: Date, // Store the expiry date of the password reset token
       default: null,
     },
   },

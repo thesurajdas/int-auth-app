@@ -24,6 +24,18 @@ app.use("/api/auth", authRoutes);
 app.use("/api/refresh", tokenRoutes);
 app.use("/api/user", userRoutes);
 
-const port = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
-app.listen(port, () => console.log(`Running on: http://localhost:${port}`));
+app.listen(PORT, (err) => {
+  if (err) {
+    console.error(`Error starting server: ${err.message}`);
+  } else {
+    console.log(`Server running on port ${PORT}`);
+  }
+}).on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`Port ${PORT} is already in use. Trying another port...`);
+    app.listen(parseInt(PORT) + 1);
+  }
+});
+
