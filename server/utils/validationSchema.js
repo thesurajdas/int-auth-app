@@ -35,7 +35,7 @@ const mailValidation = (body) => {
 const passwordResetValidation = (body) => {
   const schema = Joi.object({
     token: Joi.string().required().label("token"),
-    newPassword: passwordComplexity().required().label("newPassword"),
+    password: passwordComplexity().required().label("password"),
   });
   return schema.validate(body);
 };

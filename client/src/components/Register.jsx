@@ -26,7 +26,7 @@ const Register = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="w-full min-h-screen bg-gray-200 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-4xl h-auto flex flex-col md:flex-row rounded-lg shadow-lg overflow-hidden">
         {/* Left Section */}
         <div className="flex-1 flex flex-col items-center justify-center bg-green-500 text-white p-6 md:p-12">

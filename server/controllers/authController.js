@@ -186,7 +186,7 @@ export const resetPassword = async (req, res) => {
     }
 
     // Extract token and new password from the request body
-    const { token, newPassword } = req.body;
+    const { token, password } = req.body;
 
     // Find user by email verification token
     const user = await User.findOne({
@@ -203,7 +203,7 @@ export const resetPassword = async (req, res) => {
 
     // Hash the new password
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     // Update user's password and clear the reset token and expiry
     user.password = hashedPassword;
