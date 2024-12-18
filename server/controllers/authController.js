@@ -45,6 +45,20 @@ export const register = async (req, res) => {
       refreshTokenExpiresAt,
     } = await generateTokens(userData);
 
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(201).json({
       error: false,
       accessToken,
@@ -96,7 +110,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 14 * 60 * 1000,
+      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -186,7 +200,7 @@ export const resetPassword = async (req, res) => {
     }
 
     // Extract token and new password from the request body
-    const { token, newPassword } = req.body;
+    const { token, password } = req.body;
 
     // Find user by email verification token
     const user = await User.findOne({
@@ -203,7 +217,7 @@ export const resetPassword = async (req, res) => {
 
     // Hash the new password
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     // Update user's password and clear the reset token and expiry
     user.password = hashedPassword;

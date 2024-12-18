@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { register } from "@/lib/auth";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const [data, setData] = useState({
@@ -9,7 +10,6 @@ const Register = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
 
   const handleChange = ({ target: input }) => {
     setData({ ...data, [input.name]: input.value });
@@ -19,14 +19,14 @@ const Register = () => {
     e.preventDefault();
     try {
       await register(data.name, data.email, data.password);
-      window.location.href = "/login"; // Redirect to login page after successful registration
+      window.location.href = "/verify";
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      toast.error(err.message || "Something went wrong");
     }
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="w-full min-h-screen bg-gray-200 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-4xl h-auto flex flex-col md:flex-row rounded-lg shadow-lg overflow-hidden">
         {/* Left Section */}
         <div className="flex-1 flex flex-col items-center justify-center bg-green-500 text-white p-6 md:p-12">
@@ -75,11 +75,6 @@ const Register = () => {
               required
               className="w-full p-4 rounded-lg bg-gray-100 mb-4 text-sm outline-none"
             />
-            {error && (
-              <div className="w-full p-4 bg-red-500 text-white text-sm rounded-lg text-center mb-4">
-                {error}
-              </div>
-            )}
             <button
               type="submit"
               className="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition">

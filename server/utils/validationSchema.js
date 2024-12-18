@@ -35,7 +35,7 @@ const mailValidation = (body) => {
 const passwordResetValidation = (body) => {
   const schema = Joi.object({
     token: Joi.string().required().label("token"),
-    newPassword: passwordComplexity().required().label("newPassword"),
+    password: passwordComplexity().required().label("password"),
   });
   return schema.validate(body);
 };
@@ -48,6 +48,24 @@ const emailVerifyValidation = (body) => {
   return schema.validate(body);
 };
 
+const userValidation = (body) => {
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(30).required().label("name"),
+    unwantedField: Joi.any().forbidden(),
+  });
+  return schema.validate(body);
+};
+
+const userAdminValidation = (body) => {
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(30).required().label("name"),
+    email: Joi.string().email().required().label("email"),
+    isVerified: Joi.boolean().required().label("isVerified"),
+    unwantedField: Joi.any().forbidden(),
+  });
+  return schema.validate(body);
+};
+
 export {
   registerBodyValidation,
   loginBodyValidation,
@@ -55,4 +73,6 @@ export {
   mailValidation,
   passwordResetValidation,
   emailVerifyValidation,
+  userValidation,
+  userAdminValidation,
 };

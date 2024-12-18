@@ -28,6 +28,6 @@ export const createAccessToken = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(400).json({ error: true, message: "Invalid refresh token" });
+    res.status(400).json({ error: true, message: "Invalid Token" });
   }
 };

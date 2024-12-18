@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { getCurrentUser } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 const AuthContext = createContext();
 
@@ -18,7 +19,7 @@ export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [isVerified, setIsVerified] = useState(false);
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -29,15 +30,17 @@ export function AuthProvider({ children }) {
 
         if (refreshToken) {
           const userData = await getCurrentUser();
-
           if (userData?.data) {
             setUser(userData.data);
             setIsLoggedIn(true);
+            if (userData.data.isVerified === true) {
+              setIsVerified(true);
+            }
           } else {
             throw new Error("User data not found");
           }
         } else {
-          throw new Error("Refresh token not found");
+          console.log("You are not LoggedIn!");
         }
       } catch (error) {
         console.error("Error during authentication check:", error);
@@ -52,7 +55,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, loading }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, loading, isVerified }}>
       {children}
     </AuthContext.Provider>
   );

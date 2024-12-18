@@ -1,8 +1,9 @@
 "use client";
 import Card from "@/components/Card";
 import UserTable from "@/components/UserTable";
-import { getAllUsers } from "@/lib/auth";
+import { deleteUserById, getAllUsers, updateUserById } from "@/services/adminService.js";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaUsers } from "react-icons/fa";
 
 export default function AdminPage() {
@@ -11,14 +12,14 @@ export default function AdminPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const usersPerPage = 1;
+  const usersPerPage = 5;
 
   // Fetch users from the API based on pagination
   const fetchUsers = async (page) => {
     setLoading(true);
     try {
       const data = await getAllUsers(
-        `/user?page=${page}&limit=${usersPerPage}`
+        `/admin/users?page=${page}&limit=${usersPerPage}`
       );
       if (data.error) {
         console.error(data.message);
@@ -43,6 +44,31 @@ export default function AdminPage() {
       setCurrentPage(pageNumber);
     }
   };
+
+  const handleSave = async (updatedData) => {
+    try {
+      await updateUserById(`/admin/users/${updatedData._id}`, {
+        name: updatedData.name,
+        email: updatedData.email,
+        isVerified: updatedData.isVerified,
+      });
+      toast.success("User updated successfully");
+      fetchUsers(currentPage);
+    } catch (error) {
+      toast.error(error.message || "An error occurred. Please try again.");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteUserById(`/admin/users/${id}`);
+      toast.success("User deleted successfully");
+      fetchUsers(currentPage);
+    } catch (error) {
+      toast.error(error.message || "An error occurred. Please try again.");
+    }
+  };
+
   return (
     <>
       <section className="flex flex-col mx-3">
@@ -61,6 +87,8 @@ export default function AdminPage() {
             handlePageChange={handlePageChange}
             currentPage={currentPage}
             totalPages={totalPages}
+            handleSave={handleSave}
+            handleDelete={handleDelete}
           />
         )}
       </section>

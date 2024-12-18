@@ -28,12 +28,11 @@ const generateTokens = async (user) => {
       { expiresIn: `${refreshTokenDuration}s` }
     );
 
-    // Check if a token already exists for the user
-    const existingToken = await UserToken.findOne({ userId: user._id });
-    if (existingToken) {
-      // Delete the existing token
-      await UserToken.deleteOne({ userId: user._id });
-    }
+    // Check if a token already exists for the user and delete it
+    // const existingToken = await UserToken.findOne({ userId: user._id });
+    // if (existingToken) {
+    //   await UserToken.deleteOne({ userId: user._id });
+    // }
 
     // Save the new refresh token
     await new UserToken({ userId: user._id, token: refreshToken }).save();
