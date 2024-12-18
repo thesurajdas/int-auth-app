@@ -10,14 +10,6 @@ async function login(email, password) {
     },
     false
   ); // No token needed for login
-  const data = await fetchAPI(
-    "/auth/login",
-    {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    },
-    false
-  ); // No token needed for login
 
   return data;
 }
